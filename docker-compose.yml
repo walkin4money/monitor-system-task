@@ -1,0 +1,31 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/sensor
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=123
+      - SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+    ports:
+      - '8080:8080'
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: sensor
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+    ports:
+      - '5432:5432'
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - '4173:4173'
